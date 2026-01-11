@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../bookmarks/screens/bookmarks_screen.dart';
+import '../../media/screens/media_tracker_screen.dart';
+import '../../shopping/screens/shopping_list_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -10,9 +14,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    Center(child: Text('Index 0: Shopping')), // ShoppingListScreen()
-    Center(child: Text('Index 1: Media')), // MediaTrackerScreen()
-    Center(child: Text('Index 2: Bookmarks')), // BookmarksScreen()
+    ShoppingListScreen(), // ShoppingListScreen()
+    MediaTrackerScreen(), // MediaTrackerScreen()
+    BookmarksScreen(), // BookmarksScreen()
+  ];
+
+  //List For Change AppBar Title
+  static const List<String> _titles = <String>[
+    'My Shopping List',
+    'Media Tracker',
+    'My Bookmarks',
   ];
 
   //tap to changeItem
@@ -25,15 +36,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('PocketVault'), centerTitle: true),
+      appBar: AppBar(
+        title: Text(_titles[_selectedIndex]),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
-      bottomNavigationBar: BottomNavigationBar(items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Shopping'),
-        BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Media'),
-        BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: 'Bookmarks'),
-      ],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Shopping',
+            activeIcon: Icon(Icons.shopping_cart),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie),
+            label: 'Media',
+            activeIcon: Icon(Icons.movie),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: 'Bookmarks',
+            activeIcon: Icon(Icons.bookmark),
+          ),
+        ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: false,
       ),
     );
   }
