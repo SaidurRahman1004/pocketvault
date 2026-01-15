@@ -44,6 +44,54 @@ class DatabaseHelper {
     )
 
     ''';
+
     await db.execute(sql);
+  }
+
+  ///CURD
+  //Create
+  Future<int> addShoppingItem(ShoppingItem item) async {
+    //get database,Sure Database wa created
+    final db = await instance.database;
+    //insert item into database
+    return await db.insert('shopping_items', item.toMap());
+  }
+
+  //Read All
+  Future<List<ShoppingItem>> getAllShoppingItems() async {
+    ////get database,Sure Database wa created
+    Database db = await instance.database;
+    //get all items from database and orderd by id desc
+    var items = await db.query('shopping_items', orderBy: 'id DESC');
+    //convert map to object and return list of items ,if database was empty return empty list
+    List<ShoppingItem> itemList = items.isNotEmpty
+        ? items.map((c) => ShoppingItem.fromMap(c)).toList()
+        : [];
+    return itemList;
+  }
+
+  //Update
+  Future<int> updateShoppingItem(ShoppingItem item) async {
+    //get database,Sure Database wa created
+    Database db = await instance.database;
+    //update item in database
+    return await db.update(
+      'shopping_items',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
+  }
+
+  //Delete
+  Future<int> deleteShoppingItem(int id) async {
+    //get database,Sure Database wa created
+    Database db = await instance.database;
+    //Delete item in database
+    return await db.delete(
+        'shopping_items',
+        where: 'id = ?',
+        whereArgs: [id],
+    );
   }
 }
