@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'features/home/screens/home_screen.dart';
-import 'features/shopping/providers/hopping_provider.dart';
+import 'features/shopping/providers/shopping_provider.dart';
 
 void main() {
   runApp(

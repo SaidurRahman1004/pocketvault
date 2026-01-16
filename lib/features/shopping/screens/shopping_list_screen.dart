@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pocketvault/features/shopping/providers/hopping_provider.dart';
+import 'package:pocketvault/features/shopping/providers/shopping_provider.dart';
 import 'package:provider/provider.dart';
 
 class ShoppingListScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     return Scaffold(
       body: Consumer<ShoppingProvider>(
         builder: (context, provider, child) {
-          if (provider.shoppingItems.isNotEmpty) {
+          if (provider.shoppingItems.isEmpty) {
             return const Center(
               child: Text(
                 'No items in your shopping list.\nAdd one by tapping the + button!',
