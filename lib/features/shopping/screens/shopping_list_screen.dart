@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pocketvault/features/shopping/providers/shopping_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/add_item_dialog.dart';
+
 class ShoppingListScreen extends StatefulWidget {
   const ShoppingListScreen({super.key});
 
@@ -75,7 +77,9 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async{
+          await showAddItemDialog(context);
+        },
         child: const Icon(Icons.add),
         backgroundColor: Colors.blue,
       ),

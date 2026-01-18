@@ -22,7 +22,7 @@ class ShoppingProvider extends ChangeNotifier {
   }
 
   //add item
-  Future<void> addItems(ShoppingItem item) async {
+  Future<void> addItem(ShoppingItem item) async {
     await _dbHelper.addShoppingItem(item);
     //after adding load _shoppingItems
     loadItems();
