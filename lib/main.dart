@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'features/bookmarks/providers/bookmark_provider.dart';
 import 'features/home/screens/home_screen.dart';
 import 'features/media/providers/media_provider.dart';
 import 'features/shopping/providers/shopping_provider.dart';
@@ -11,7 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => ShoppingProvider()),
         ChangeNotifierProvider(create: (_) => MediaProvider()),
-        // ChangeNotifierProvider(create: (_) => BookmarkProvider()),
+        ChangeNotifierProvider(create: (_) => BookmarkProvider()),
       ],
       child: const MyApp(),
     ),

@@ -3,6 +3,7 @@ import 'package:pocketvault/data/models/media_item_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../data/models/shopping_item_model.dart';
+import '../../data/models/bookmark_model.dart';
 
 class DatabaseHelper {
   //Singleton Pattern For single Global instance
@@ -63,6 +64,16 @@ class DatabaseHelper {
     )
     ''';
     await db.execute(mediaSql);
+
+    //bookmark tablr
+    await db.execute('''
+      CREATE TABLE bookmarks(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT NOT NULL,
+          url TEXT NOT NULL,
+          category TEXT NOT NULL
+      )
+      ''');
   }
 
   ///CURD Shoping
@@ -151,5 +162,29 @@ class DatabaseHelper {
     Database db = await instance.database;
     //Delete item in database
     return await db.delete('media_items', where: 'id = ?', whereArgs: [id]);
+  }
+
+  //Bookmark CRUD
+  //insert add
+  Future<int> addBookmark(Bookmark bookmark) async {
+    final db = await instance.database;
+    return await db.insert('bookmarks', bookmark.toMap());
+  }
+
+  //Featch All Items From DB
+  Future<List<Bookmark>> getAllBookmarks() async {
+    //get database,Sure Database wa created
+    Database db = await instance.database;
+    var bookmarks = await db.query('bookmarks', orderBy: 'id DESC');
+    List<Bookmark> bookmarkList = bookmarks.isNotEmpty
+        ? bookmarks.map((c) => Bookmark.fromMap(c)).toList()
+        : [];
+    return bookmarkList;
+  }
+
+  //delete
+  Future<int> deleteBookmark(int id) async {
+    Database db = await instance.database;
+    return await db.delete('bookmarks', where: 'id = ?', whereArgs: [id]);
   }
 }
