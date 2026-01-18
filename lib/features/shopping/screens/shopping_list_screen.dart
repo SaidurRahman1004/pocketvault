@@ -82,6 +82,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.blue,
+        shape: const  CircleBorder(),
       ),
     );
   }

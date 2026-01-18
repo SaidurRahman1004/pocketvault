@@ -1,4 +1,5 @@
 import 'package:path/path.dart';
+import 'package:pocketvault/data/models/media_item_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../data/models/shopping_item_model.dart';
@@ -36,7 +37,7 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     var sql = '''
           
-    Create TABLE shopping_items(
+    CREATE TABLE shopping_items(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         category TEXT NOT NULL,
@@ -46,9 +47,25 @@ class DatabaseHelper {
     ''';
 
     await db.execute(sql);
+
+    //Media Item Table
+    var mediaSql = '''
+    
+    CREATE TABLE media_items(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    type TEXT NOT NULL,
+    status TEXT NOT NULL,
+    rating INTEGER NOT NULL,
+    review TEXT NOT NULL
+    
+    
+    )
+    ''';
+    await db.execute(mediaSql);
   }
 
-  ///CURD
+  ///CURD Shoping
   //Create
   Future<int> addShoppingItem(ShoppingItem item) async {
     //get database,Sure Database wa created
@@ -88,10 +105,51 @@ class DatabaseHelper {
     //get database,Sure Database wa created
     Database db = await instance.database;
     //Delete item in database
-    return await db.delete(
-        'shopping_items',
-        where: 'id = ?',
-        whereArgs: [id],
+    return await db.delete('shopping_items', where: 'id = ?', whereArgs: [id]);
+  }
+
+  //CURD MEDia
+  //Post add Item
+  Future<int> addMediaItem(MediaItem item) async {
+    //get database,Sure Database wa created
+    final db = await instance.database;
+    //insert item into database
+    return await db.insert('media_items', item.toMap());
+  }
+
+  //Featch All Items From DB
+  Future<List<MediaItem>> getAllMediaItems() async {
+    //get database,Sure Database wa created
+    Database db = await instance.database;
+    //get all items from database and orderd by id desc
+    var items = await db.query('media_items', orderBy: 'id DESC');
+    //convert map to object and return list of items ,if database was empty return empty list
+    List<MediaItem> itemList = items.isNotEmpty
+        ? items.map((c) {
+            return MediaItem.fromMap(c);
+          }).toList()
+        : [];
+    return itemList;
+  }
+
+  //Update Media Item
+  Future<int> updateMediaItem(MediaItem item) async {
+    //get database,Sure Database wa created
+    Database db = await instance.database;
+    //update item in database
+    return db.update(
+      'media_items',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
     );
+  }
+
+  //Delete Media Item
+  Future<int> deleteMediaItem(int id) async {
+    //get database,Sure Database wa created
+    Database db = await instance.database;
+    //Delete item in database
+    return await db.delete('media_items', where: 'id = ?', whereArgs: [id]);
   }
 }
