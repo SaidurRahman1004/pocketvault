@@ -86,20 +86,22 @@ Future<void> showAddMediaDialog(BuildContext context) async {
                     const SizedBox(height: 20),
                     // Rating Bar star loop
                     const Text('Rating'),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 4.0,
                       children: List.generate(5, (index) {
-                        return IconButton(
-                          onPressed: () {
+                        return GestureDetector(
+                          onTap: () {
                             setDialogState(() {
                               currentRating = index + 1;
                             });
                           },
-                          icon: Icon(
+                          child: Icon(
                             index < currentRating
                                 ? Icons.star
                                 : Icons.star_border,
                             color: Colors.amber,
+                            size: 28,
                           ),
                         );
                       }),
