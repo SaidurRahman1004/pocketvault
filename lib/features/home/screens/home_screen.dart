@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:pocketvault/core/theme/theme_provider.dart';
 import '../../bookmarks/screens/bookmarks_screen.dart';
 import '../../media/screens/media_tracker_screen.dart';
 import '../../shopping/screens/shopping_list_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,6 +41,21 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(_titles[_selectedIndex]),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          Consumer<ThemeProvider>(
+            builder: (context, themeProvider, child) {
+              return IconButton(
+                onPressed: () {
+                  final provider = Provider.of<ThemeProvider>(context, listen: false);
+                  provider.toggleTheme(!provider.isDarkMode);
+                },
+                icon: Icon(
+                  themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
