@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pocketvault/features/shopping/providers/shopping_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../widgets/empty_state_widget.dart';
 import '../widgets/add_item_dialog.dart';
 
 class ShoppingListScreen extends StatefulWidget {
@@ -26,63 +28,71 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
       body: Consumer<ShoppingProvider>(
         builder: (context, provider, child) {
           if (provider.shoppingItems.isEmpty) {
-            return const Center(
-              child: Text(
-                'No items in your shopping list.\nAdd one by tapping the + button!',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.red),
-              ),
+            return const EmptyStateWidget(
+              imagePath: 'assets/images/empty_shopping.png',
+              message: 'Your shopping list is empty.\nTap + to add an item!',
             );
           }
-          return ListView.builder(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: provider.shoppingItems.length,
-            itemBuilder: (_, index) {
-              final item = provider.shoppingItems[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 4.0),
-                //Checkbox for isBought and toggle Cheakbox value is bool
-                child: ListTile(
-                  leading: Checkbox(
-                    activeColor: Colors.blue,
+          return AnimationLimiter(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              itemCount: provider.shoppingItems.length,
+              itemBuilder: (_, index) {
+                final item = provider.shoppingItems[index];
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 375),
+                  child: SlideAnimation(
+                    verticalOffset: 50.0,
+                    child: FadeInAnimation(
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        //Checkbox for isBought and toggle Cheakbox value is bool
+                        child: ListTile(
+                          leading: Checkbox(
+                            activeColor: Colors.blue,
 
-                    value: item.isBought,
-                    onChanged: (bool? value) {
-                      provider.toggleBoughtStatus(item);
-                    },
-                  ),
-                  //title
-                  title: Text(
-                    item.name,
-                    style: TextStyle(
-                      decoration: item.isBought
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                      color: item.isBought ? Colors.grey : Colors.black,
+                            value: item.isBought,
+                            onChanged: (bool? value) {
+                              provider.toggleBoughtStatus(item);
+                            },
+                          ),
+                          //title
+                          title: Text(
+                            item.name,
+                            style: TextStyle(
+                              decoration: item.isBought
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                              color: item.isBought ? Colors.grey : null,
+                            ),
+                          ),
+                          //Catagory
+                          subtitle: Text(item.category),
+                          //delete button
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete_outline, color: Colors.red),
+                            onPressed: () {
+                              provider.deleteItem(item.id!);
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  //Catagory
-                  subtitle: Text(item.category),
-                  //delete button
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    onPressed: () {
-                      provider.deleteItem(item.id!);
-                    },
-                  ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async{
+        onPressed: () async {
           await showAddItemDialog(context);
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.blue,
-        shape: const  CircleBorder(),
+        shape: const CircleBorder(),
       ),
     );
   }
