@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://192.168.0.100:8000/api';
+  static const String _baseUrl = 'https://saidurapi1004.pythonanywhere.com/api';
 
   //get tocken from Sharepref /_getToken use for find acces token from memory and use in header
   static Future<String?> _getToken() async {
