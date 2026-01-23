@@ -18,8 +18,8 @@ class _MediaTrackerScreenState extends State<MediaTrackerScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      //When App Start then load Media Items
+    Future.microtask(() {
+      //When App Start then load Media Items ,Notify Item error Fix
       Provider.of<MediaProvider>(context, listen: false).loadMediaItems();
     });
   }

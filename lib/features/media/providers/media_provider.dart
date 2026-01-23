@@ -64,7 +64,9 @@ class MediaProvider extends ChangeNotifier {
     try {
       final response = await ApiService.post('media-items', item.toMap());
       if (response.statusCode == 201) {
-        await loadMediaItems();
+        final dynamic data = jsonDecode(response.body);
+        _mediaItems.add(MediaItem.fromMap(data));
+        notifyListeners();
       }
     } catch (e) {
       debugPrint(e.toString());

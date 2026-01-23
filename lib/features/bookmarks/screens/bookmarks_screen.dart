@@ -18,7 +18,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<BookmarkProvider>(context, listen: false).loadBookMarkItems();
+    Future.microtask(() {
+      Provider.of<BookmarkProvider>(context, listen: false).loadBookMarkItems();
+    });
   }
 
   //Url Lanchar
