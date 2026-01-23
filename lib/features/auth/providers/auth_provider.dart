@@ -49,7 +49,7 @@ class AuthProvider extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
         return true;
-      }else{
+      } else {
         //if error then _isAuthenticated false
         _isAuthenticated = false;
         _isLoading = false;
@@ -62,6 +62,29 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  //Register Provider
+  Future<bool> signUp(String username, String email, String password) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final response = await ApiService.register(username, email, password);
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   //logout
   Future<void> logout() async {
     //clear all data from memory and _isAuthenticated false

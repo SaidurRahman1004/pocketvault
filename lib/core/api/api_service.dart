@@ -38,13 +38,18 @@ class ApiService {
   //Auth Register
   static Future<http.Response> register(
     String username,
+    String email,
     String password,
   ) async {
     final url = Uri.parse('$_baseUrl/users/');
     return await http.post(
       url,
       headers: await _getHeaders(),
-      body: jsonEncode({'username': username, 'password': password}),
+      body: jsonEncode({
+        'username': username,
+        'email': email,
+        'password': password,
+      }),
     );
   }
 
