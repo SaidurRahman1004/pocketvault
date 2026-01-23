@@ -74,6 +74,17 @@ class ApiService {
     );
   }
 
+  //Update
+  static Future<http.Response> put(String endpoint, int id,Map<String, dynamic> data,) async{
+
+    final url = Uri.parse('$_baseUrl/$endpoint/$id/');
+    return await http.put(url,
+      headers: await _getHeaders(),
+      body: jsonEncode(data)
+    );
+
+  }
+
   //Delete
   static Future<http.Response> delete(String endpoint, int id) async {
     final url = Uri.parse('$_baseUrl/$endpoint/$id/');

@@ -3,8 +3,9 @@ class Bookmark{
   final String title;
   final String url;
   final String category;
+  final int? userId;
 
-  Bookmark({this.id, required this.title, required this.url, required this.category});
+  Bookmark({this.id, required this.title, required this.url, required this.category, this.userId});
   
   //obj to json
   Map<String,dynamic> toMap(){
@@ -13,6 +14,7 @@ class Bookmark{
       'title':title,
       'url':url,
       'category':category,
+      'userId':userId,
 
     };
   }
@@ -24,6 +26,7 @@ class Bookmark{
       title: map['title'],
       url: map['url'],
       category: map['category'],
+      userId: map['userId'],
     );
   }
 }

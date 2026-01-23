@@ -7,6 +7,7 @@ class MediaItem {
   final String status; //Like ... "Watching", "Completed", "Plan to Watch"
   final int rating; // ratting 1 to 5 star
   final String review;
+  final int? userId;
 
   MediaItem({
     this.id,
@@ -15,6 +16,7 @@ class MediaItem {
     this.status = 'Plan to Watch',
     this.rating = 0,
     this.review = '',
+    this.userId,
   });
 
   //Serializer
@@ -27,6 +29,7 @@ class MediaItem {
       'status': status,
       'rating': rating,
       'review': review,
+      'userId': userId,
     };
   }
 
@@ -41,6 +44,7 @@ class MediaItem {
       status: map['status'],
       rating: map['rating'],
       review: map['review'],
+      userId: map['userId'],
     );
   }
 }
