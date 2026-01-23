@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/CenterCircularProgressIndicator.dart';
 import '../../../widgets/custo_snk.dart';
+import '../providers/auth_provider.dart';
+import 'auth_signUP_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +19,38 @@ class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+
+  //login Button
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      bool loginSuccess = await authProvider.login(
+        _usernameController.text.trim(),
+        _passwordController.text,
+      );
+      if (!loginSuccess && mounted) {
+        mySnkmsg('Login Failed: Invalid credentials', context);
+      }
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        mySnkmsg('Login Failed: $e', context);
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -72,17 +107,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 const SizedBox(height: 30),
-
-                if (_isLoading) const CenterCircularProgressIndicator(),
-
-                const SizedBox(height: 10),
                 Visibility(
                   visible: !_isLoading,
+                  replacement: const CenterCircularProgressIndicator(),
                   child: CustomButton(
                     buttonName: "Login",
                     icon: Icons.login,
                     color: Colors.teal,
                     onPressed: () {
+                      _submit();
                     },
                   ),
                 ),
@@ -91,7 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 TextButton(
                   onPressed: () {
-                    mySnkmsg("Redirecting to Register...", context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthSignUpScreen(),
+                      ),
+                    );
                   },
                   child: const Text("Don't have an account? Register"),
                 ),
