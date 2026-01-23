@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pocketvault/core/theme/theme_provider.dart';
+import 'package:pocketvault/features/auth/providers/auth_provider.dart';
 import '../../bookmarks/screens/bookmarks_screen.dart';
 import '../../media/screens/media_tracker_screen.dart';
 import '../../shopping/screens/shopping_list_screen.dart';
@@ -46,12 +47,30 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, themeProvider, child) {
               return IconButton(
                 onPressed: () {
-                  final provider = Provider.of<ThemeProvider>(context, listen: false);
+                  final provider = Provider.of<ThemeProvider>(
+                    context,
+                    listen: false,
+                  );
                   provider.toggleTheme(!provider.isDarkMode);
                 },
                 icon: Icon(
                   themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
                 ),
+              );
+            },
+          ),
+          //logout
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              return IconButton(
+                onPressed: () {
+                  final provider = Provider.of<AuthProvider>(
+                    context,
+                    listen: false,
+                  );
+                  provider.logout();
+                },
+                icon: Icon(Icons.logout),
               );
             },
           ),
