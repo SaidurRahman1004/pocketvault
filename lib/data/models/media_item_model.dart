@@ -25,7 +25,7 @@ class MediaItem {
     return {
       'id': id,
       'title': title,
-      'type': type.name, // savae Enum as String
+      'type': type.name.toUpperCase(),
       'status': status,
       'rating': rating,
       'review': review,
@@ -36,14 +36,15 @@ class MediaItem {
   //Deserializer
   //Map to Flutter Object
   factory MediaItem.fromMap(Map<String, dynamic> map) {
+    String rawType = map['type']?.toString().toLowerCase() ?? 'movie';
+
     return MediaItem(
       id: map['id'],
-      title: map['title'],
-      //convert String to Enum
-      type: MediaType.values.byName(map['type']),
-      status: map['status'],
-      rating: map['rating'],
-      review: map['review'],
+      title: map['title'] ?? '',
+      type: MediaType.values.byName(rawType),
+      status: map['status'] ?? 'Plan to Watch',
+      rating: (map['rating'] as num?)?.toInt() ?? 0,
+      review: map['review'] ?? '',
       userId: map['userId'],
     );
   }

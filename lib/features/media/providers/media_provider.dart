@@ -41,15 +41,27 @@ class MediaProvider extends ChangeNotifier {
       final response = await ApiService.get('media-items');
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        _mediaItems = data.map((item) => MediaItem.fromMap(item)).toList();
-      } else {
-        _mediaItems = [];
+        _mediaItems = data
+            .map((item) {
+              try {
+                return MediaItem.fromMap(item);
+              } catch (e) {
+                debugPrint("Individual Item Parse Error: $e");
+                return null;
+              }
+            })
+            .whereType<MediaItem>()
+            .toList();
+
+        print("Successfully loaded ${_mediaItems.length} items");
       }
     } catch (e) {
+      debugPrint("Load Media Items Error: $e");
       _mediaItems = [];
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
 
   //Add item
@@ -63,10 +75,18 @@ class MediaProvider extends ChangeNotifier {
      */
     try {
       final response = await ApiService.post('media-items', item.toMap());
-      if (response.statusCode == 201) {
+      /*
+      if (response.statusCode == 201 || response.statusCode == 200) {
         final dynamic data = jsonDecode(response.body);
         _mediaItems.add(MediaItem.fromMap(data));
         notifyListeners();
+      }
+
+      */
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        await loadMediaItems();
+      } else {
+        debugPrint("Failed to add: ${response.statusCode} - ${response.body}");
       }
     } catch (e) {
       debugPrint(e.toString());
